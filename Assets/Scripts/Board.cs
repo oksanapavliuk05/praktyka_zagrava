@@ -21,9 +21,11 @@ public class Board : MonoBehaviour
             for(int j =0; j < height; j++)
             {
                 Vector2 tempPosition = new Vector2(i, j);
-                GameObject newTile = Instantiate(tilePrefab, tempPosition, Quaternion.identity); 
+                GameObject backgroundTile = Instantiate(tilePrefab, tempPosition, Quaternion.identity) as GameObject; 
                 //Instantiate(tilePrefab, tempPosition, Quaternion.identity); 
-                allTiles[i, j] = newTile;
+                allTiles[i, j] = backgroundTile;
+                backgroundTile.transform.parent = this.transform;
+                backgroundTile.name = "(" + i + "," + j + ")";
             }
         }
     }
