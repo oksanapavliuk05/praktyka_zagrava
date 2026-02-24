@@ -4,14 +4,14 @@ public class Board : MonoBehaviour
 {
     public int width;
     public int height;
-    public GameObject tilePrefab;
-    private GameObject[,] allTiles;
-    //private BackgroundTile[,] allTiles; // масив для тайлів розміром нашого поля
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public GameObject tilePrefab;   
+    public GameObject[] dots;
+    public GameObject[,] allDots;
+    private BackgroundTile[,] allTiles; // масив для тайлів розміром нашого поля
     void Start()
     {
-        allTiles = new GameObject[width, height];  // масив для тайлів розміром нашого поля
-        //allTiles = new BackgroundTile[width, height];  // масив для тайлів розміром нашого поля
+        allDots = new GameObject[width, height]; 
+        allTiles = new BackgroundTile[width, height]; 
         SetUp();
     }
     private void SetUp()
@@ -22,10 +22,14 @@ public class Board : MonoBehaviour
             {
                 Vector2 tempPosition = new Vector2(i, j);
                 GameObject backgroundTile = Instantiate(tilePrefab, tempPosition, Quaternion.identity) as GameObject; 
-                //Instantiate(tilePrefab, tempPosition, Quaternion.identity); 
-                allTiles[i, j] = backgroundTile;
+                
                 backgroundTile.transform.parent = this.transform;
                 backgroundTile.name = "(" + i + "," + j + ")";
+                int dotToUse = Random.Range(0, dots.Length);
+                GameObject dot = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
+                dot.transform.parent = this.transform;
+                dot.name =  "(" + i + "," + j + ")";
+                allDots[i, j] = dot;
             }
         }
     }
