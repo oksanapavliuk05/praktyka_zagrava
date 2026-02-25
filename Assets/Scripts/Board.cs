@@ -2,12 +2,30 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    public int width;
-    public int height;
-    public GameObject tilePrefab;   
-    public GameObject[] dots;
-    public GameObject[,] allDots;
+    [SerializeField]
+    private int width;
+    [SerializeField]
+    private int height;
+    [SerializeField]
+    private GameObject tilePrefab;   
+    [SerializeField]
+    private GameObject[] dots;
+    private GameObject[,] allDots;
     private BackgroundTile[,] allTiles; // масив для тайлів розміром нашого поля
+
+    public int Width { 
+        get {return width;} 
+    } 
+    public int Height { 
+        get {return height;} 
+    } 
+    public GameObject[,] GetDots() {
+        return allDots; 
+    } 
+    public void SetDots(int column, int row, GameObject newDot) {
+        allDots[column, row] = newDot;
+    }
+
     void Start()
     {
         allDots = new GameObject[width, height]; 
