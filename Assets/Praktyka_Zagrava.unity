@@ -158,6 +158,8 @@ MonoBehaviour:
   - {fileID: 2286071991819681293, guid: 85720c639762a1f4a9efbdb5b348fa71, type: 3}
   - {fileID: 5496521805927086489, guid: a492aa5a7edce8d4c9b87cc00820493d, type: 3}
   - {fileID: 8003725661048030578, guid: 6147abfa1933c2c44ae75c20b4ac4689, type: 3}
+  rightAngle: 45
+  leftAngle: 135
 --- !u!4 &401253959
 Transform:
   m_ObjectHideFlags: 0

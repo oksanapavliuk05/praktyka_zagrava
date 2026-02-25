@@ -12,7 +12,6 @@ public class Dot : MonoBehaviour
     private Vector2 startTouchPosition;
     private Vector2 endTouchPosition;
     private Vector2 tempPosition;
-    private float swipeAngle = 0;
 
     public int Column{
         get{ return column;}

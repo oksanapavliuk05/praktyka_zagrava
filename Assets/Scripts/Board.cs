@@ -57,7 +57,9 @@ public class Board : MonoBehaviour
         int column = dot.Column;
         int row = dot.Row;
         Dot otherDot = null;
-        if(swipeAngle > -45 && swipeAngle <= 45 && column < width-1)
+        float rightAngle = StaticSwipe.rightAngle;
+        float leftAngle = StaticSwipe.leftAngle;
+        if(swipeAngle > -rightAngle && swipeAngle <= rightAngle && column < width-1)
         {
             //Right Swipe
             otherDot = allDots[column + 1, row].GetComponent<Dot>();
@@ -66,14 +68,14 @@ public class Board : MonoBehaviour
             otherDot.SetColumn(otherDot.Column - 1);
             dot.SetColumn(dot.Column + 1);
             
-        } else if(swipeAngle > 45 && swipeAngle <= 135 && row < height-1)
+        } else if(swipeAngle > rightAngle && swipeAngle <= leftAngle && row < height-1)
         {
             //UP Swipe
             otherDot = allDots[column, row + 1].GetComponent<Dot>();
             // int tempRow = otherDot.Row;
             otherDot.SetRow(otherDot.Row - 1);
             dot.SetRow(dot.Row + 1);
-        } else if((swipeAngle > 135 || swipeAngle <= -135) && column > 0)
+        } else if((swipeAngle > leftAngle || swipeAngle <= -leftAngle) && column > 0)
         {
             //Left Swipe
             otherDot = allDots[column - 1, row].GetComponent<Dot>();
@@ -81,7 +83,7 @@ public class Board : MonoBehaviour
             // int tempColumn = otherDot.Column;
             otherDot.SetColumn(otherDot.Column + 1);
             dot.SetColumn(dot.Column - 1);
-        } else if((swipeAngle < -45 || swipeAngle > 135) && row > 0)
+        } else if((swipeAngle < -rightAngle || swipeAngle > leftAngle) && row > 0)
         {
             //DOWN Swipe
             otherDot = allDots[column, row - 1].GetComponent<Dot>();
