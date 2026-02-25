@@ -14,7 +14,20 @@ public class Dot : MonoBehaviour
     private Vector2 tempPosition;
     private float swipeAngle = 0;
 
-
+    public int Column{
+        get{ return column;}
+    }
+    public void SetColumn(int col)
+    {
+        column = col;
+    }
+    public int Row{
+        get{return row;}
+    }
+    public void SetRow(int r)
+    {
+        row = r;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,80 +45,28 @@ public class Dot : MonoBehaviour
         //update coordinates of point to new position
         targetX = column;
         targetY = row;
-        if(Mathf.Abs(targetX - transform.position.x)> .1)
+        if(targetX != transform.position.x)
         {
             //Move Towards the target 
             tempPosition = new Vector2(targetX, transform.position.y);
             transform.position = Vector2.Lerp(transform.position, tempPosition, .4f);
         }
-        else
-        {
-            //Directrly set position
-            tempPosition = new Vector2(targetX, transform.position.y);
-            transform.position = tempPosition;
-            board.SetDots(column, row, this.gameObject);
-        }
-        if(Mathf.Abs(targetY - transform.position.y)> .1)
+        if(targetY != transform.position.y)
         {
             //Move Towards the target 
             tempPosition = new Vector2(transform.position.x, targetY);
             transform.position = Vector2.Lerp(transform.position, tempPosition, .4f);
-        }
-        else
-        {
-            //Directrly set position
-            tempPosition = new Vector2(transform.position.x, targetY);
-            transform.position = tempPosition;
-            board.SetDots(column, row, this.gameObject);
         }
     }
 
     private void OnMouseDown()
     {
         startTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //Debug.Log(startTouchPosition);
     }
 
     private void OnMouseUp()
     {
         endTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        CalculateAngle(); 
-    }
-
-    void CalculateAngle()
-    {
-        swipeAngle = Mathf.Atan2(endTouchPosition.y - startTouchPosition.y, endTouchPosition.x - startTouchPosition.x) * 180 / Mathf.PI;
-        //Debug.Log(swipeAngle);
-        MovePieces();
-    }
-
-    void MovePieces()
-    {
-        GameObject[,] allDots = board.GetDots();
-        if(swipeAngle > -45 && swipeAngle <= 45 && column < board.Width)
-        {
-            //Right Swipe
-            otherDot = allDots[column + 1, row];
-            otherDot.GetComponent<Dot>().column -=   1;
-            column += 1;
-        } else if(swipeAngle > 45 && swipeAngle <= 135 && row < board.Height)
-        {
-            //UP Swipe
-            otherDot = allDots[column, row + 1];
-            otherDot.GetComponent<Dot>().row -= 1;
-            row += 1;
-        } else if((swipeAngle > 135 || swipeAngle <= -135) && column > 0)
-        {
-            //Left Swipe
-            otherDot = allDots[column - 1, row];
-            otherDot.GetComponent<Dot>().column += 1;
-            column -= 1;
-        } else if((swipeAngle < -45 || swipeAngle > 135) && row > 0)
-        {
-            //DOWN Swipe
-            otherDot = allDots[column, row - 1];
-            otherDot.GetComponent<Dot>().row += 1;
-            row -= 1;
-        }
+        board.MovePieces(this, startTouchPosition, endTouchPosition);
     }
 }

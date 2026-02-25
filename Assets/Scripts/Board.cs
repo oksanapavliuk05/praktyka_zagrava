@@ -51,4 +51,48 @@ public class Board : MonoBehaviour
             }
         }
     }
+    public void MovePieces(Dot dot, Vector2 startTouchPosition, Vector2 endTouchPosition)
+    {        
+        float swipeAngle = Mathf.Atan2(endTouchPosition.y - startTouchPosition.y, endTouchPosition.x - startTouchPosition.x) * 180 / Mathf.PI;
+        int column = dot.Column;
+        int row = dot.Row;
+        Dot otherDot = null;
+        if(swipeAngle > -45 && swipeAngle <= 45 && column < width-1)
+        {
+            //Right Swipe
+            otherDot = allDots[column + 1, row].GetComponent<Dot>();
+            
+            // int tempColumn = otherDot.Column;
+            otherDot.SetColumn(otherDot.Column - 1);
+            dot.SetColumn(dot.Column + 1);
+            
+        } else if(swipeAngle > 45 && swipeAngle <= 135 && row < height-1)
+        {
+            //UP Swipe
+            otherDot = allDots[column, row + 1].GetComponent<Dot>();
+            // int tempRow = otherDot.Row;
+            otherDot.SetRow(otherDot.Row - 1);
+            dot.SetRow(dot.Row + 1);
+        } else if((swipeAngle > 135 || swipeAngle <= -135) && column > 0)
+        {
+            //Left Swipe
+            otherDot = allDots[column - 1, row].GetComponent<Dot>();
+            
+            // int tempColumn = otherDot.Column;
+            otherDot.SetColumn(otherDot.Column + 1);
+            dot.SetColumn(dot.Column - 1);
+        } else if((swipeAngle < -45 || swipeAngle > 135) && row > 0)
+        {
+            //DOWN Swipe
+            otherDot = allDots[column, row - 1].GetComponent<Dot>();
+            // int tempRow = otherDot.Row;
+            otherDot.SetRow(otherDot.Row + 1);
+            dot.SetRow(dot.Row - 1);
+        }
+        if(otherDot != null)
+        {
+            allDots[dot.Column, dot.Row] = dot.gameObject;
+            allDots[otherDot.Column, otherDot.Row] = otherDot.gameObject;
+        }
+    }
 }
