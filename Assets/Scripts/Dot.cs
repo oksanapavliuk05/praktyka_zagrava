@@ -1,17 +1,23 @@
 using UnityEngine;
+using System.Collections;
 
 public class Dot : MonoBehaviour
 {   
-
+    [Header("Board Variables")]
     private int column;
     private int row;
     private int targetX;
     private int targetY;
+
     private Board board;
     private GameObject otherDot;
     private Vector2 startTouchPosition;
     private Vector2 endTouchPosition;
     private Vector2 tempPosition;
+
+    private bool  isMatched = false;
+    private int previousColumn;
+    private int previousRow;  
 
     public int Column{
         get{ return column;}
@@ -27,6 +33,20 @@ public class Dot : MonoBehaviour
     {
         row = r;
     }
+    public bool IsMatched{
+        get{return isMatched;}
+        set{isMatched = value;}
+    }
+
+    public int PreviousColumn{
+        get{return previousColumn;}
+        set{previousColumn = value;}
+    }
+    public int PreviousRow{
+        get{return previousRow;}
+        set{previousRow = value;}
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -40,7 +60,14 @@ public class Dot : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        //Finding matches
+        board.FindMatches(this);
+        if (isMatched)
+        {
+            SpriteRenderer mySprite = GetComponent<SpriteRenderer>();
+            mySprite.color = new Color(0f, 0f, 0f, .2f);
+        }
         //update coordinates of point to new position
         targetX = column;
         targetY = row;
@@ -57,7 +84,6 @@ public class Dot : MonoBehaviour
             transform.position = Vector2.Lerp(transform.position, tempPosition, .4f);
         }
     }
-
     private void OnMouseDown()
     {
         startTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -66,6 +92,7 @@ public class Dot : MonoBehaviour
     private void OnMouseUp()
     {
         endTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        board.MovePieces(this, startTouchPosition, endTouchPosition);
+        board.calculateAngle(this, startTouchPosition, endTouchPosition);
     }
+    
 }

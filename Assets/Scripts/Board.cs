@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 public class Board : MonoBehaviour
 {
     [SerializeField]
@@ -13,6 +13,7 @@ public class Board : MonoBehaviour
     private GameObject[,] allDots;
     private BackgroundTile[,] allTiles; // масив для тайлів розміром нашого поля
 
+    private float swipeResist = 1f;
     public int Width { 
         get {return width;} 
     } 
@@ -51,19 +52,28 @@ public class Board : MonoBehaviour
             }
         }
     }
-    public void MovePieces(Dot dot, Vector2 startTouchPosition, Vector2 endTouchPosition)
+    public void calculateAngle(Dot dot, Vector2 startTouchPosition, Vector2 endTouchPosition)
+    {
+        if(Mathf.Abs(endTouchPosition.y - startTouchPosition.y) > swipeResist || Mathf.Abs(endTouchPosition.x - startTouchPosition.x) > swipeResist)
+        {        
+            float swipeAngle = Mathf.Atan2(endTouchPosition.y - startTouchPosition.y, endTouchPosition.x - startTouchPosition.x) * 180 / Mathf.PI;
+            MovePieces(dot, swipeAngle);
+        }
+    }
+    public void MovePieces(Dot dot, float swipeAngle)
     {        
-        float swipeAngle = Mathf.Atan2(endTouchPosition.y - startTouchPosition.y, endTouchPosition.x - startTouchPosition.x) * 180 / Mathf.PI;
+        
         int column = dot.Column;
         int row = dot.Row;
         Dot otherDot = null;
+        dot.PreviousColumn = column;
+        dot.PreviousRow = row;
         float rightAngle = StaticSwipe.rightAngle;
         float leftAngle = StaticSwipe.leftAngle;
         if(swipeAngle > -rightAngle && swipeAngle <= rightAngle && column < width-1)
         {
             //Right Swipe
             otherDot = allDots[column + 1, row].GetComponent<Dot>();
-            
             // int tempColumn = otherDot.Column;
             otherDot.SetColumn(otherDot.Column - 1);
             dot.SetColumn(dot.Column + 1);
@@ -79,7 +89,6 @@ public class Board : MonoBehaviour
         {
             //Left Swipe
             otherDot = allDots[column - 1, row].GetComponent<Dot>();
-            
             // int tempColumn = otherDot.Column;
             otherDot.SetColumn(otherDot.Column + 1);
             dot.SetColumn(dot.Column - 1);
@@ -95,6 +104,55 @@ public class Board : MonoBehaviour
         {
             allDots[dot.Column, dot.Row] = dot.gameObject;
             allDots[otherDot.Column, otherDot.Row] = otherDot.gameObject;
+        }
+        StartCoroutine(CheckMoveCo(dot, otherDot));
+    }
+
+    public IEnumerator CheckMoveCo(Dot dot, Dot otherDot)
+    {
+        yield return new WaitForSeconds(.5f);
+        if(otherDot != null)
+        {
+            if(!dot.IsMatched && !otherDot.GetComponent<Dot>().IsMatched)
+            {
+                otherDot.GetComponent<Dot>().SetRow(dot.Row);
+                otherDot.GetComponent<Dot>().SetColumn(dot.Column);
+                dot.GetComponent<Dot>().SetRow(dot.PreviousRow);
+                dot.GetComponent<Dot>().SetColumn(dot.PreviousColumn);
+                allDots[dot.Column, dot.Row] = dot.gameObject;
+                allDots[otherDot.Column, otherDot.Row] = otherDot.gameObject;
+            }
+            otherDot = null;   
+        }   
+        
+    }
+
+    //Finding matches 3 in a row
+    public void FindMatches(Dot dot)
+    {
+        int column = dot.Column;
+        int row = dot.Row;
+        if(column > 0 && column < width - 1)
+        {
+            GameObject leftDot1 = allDots[column - 1, row];
+            GameObject rightDot1 = allDots[column + 1, row];
+            if(leftDot1.tag == dot.gameObject.tag && rightDot1.tag == dot.gameObject.tag)
+            {
+                leftDot1.GetComponent<Dot>().IsMatched = true;
+                rightDot1.GetComponent<Dot>().IsMatched = true;
+                dot.IsMatched = true;
+            }
+        }
+        if(row > 0 && row < height - 1)
+        {
+            GameObject upDot1 = allDots[column, row + 1];
+            GameObject downDot1 = allDots[column, row -1];
+            if(upDot1.tag == dot.gameObject.tag && downDot1.tag == dot.gameObject.tag)
+            {
+                upDot1.GetComponent<Dot>().IsMatched = true;
+                downDot1.GetComponent<Dot>().IsMatched = true;
+                dot.IsMatched = true;
+            }
         }
     }
 }
