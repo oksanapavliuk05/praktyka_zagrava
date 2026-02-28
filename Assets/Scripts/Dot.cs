@@ -76,6 +76,10 @@ public class Dot : MonoBehaviour
             //Move Towards the target 
             tempPosition = new Vector2(targetX, transform.position.y);
             transform.position = Vector2.Lerp(transform.position, tempPosition, .4f);
+            if(board.GetDot(column, row)!= this.gameObject)
+            {
+                board.SetDots(column, row, this.gameObject);
+            }
         }
         if(targetY != transform.position.y)
         {

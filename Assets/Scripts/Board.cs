@@ -23,6 +23,9 @@ public class Board : MonoBehaviour
     public GameObject[,] GetDots() {
         return allDots; 
     } 
+    public GameObject GetDot(int column, int row) {
+        return allDots[column, row]; 
+    } 
     public void SetDots(int column, int row, GameObject newDot) {
         allDots[column, row] = newDot;
     }
@@ -111,10 +114,12 @@ public class Board : MonoBehaviour
         if(swipeAngle > -rightAngle && swipeAngle <= rightAngle && column < width-1)
         {
             //Right Swipe
-            otherDot = allDots[column + 1, row].GetComponent<Dot>();
-            // int tempColumn = otherDot.Column;
-            otherDot.SetColumn(otherDot.Column - 1);
-            dot.SetColumn(dot.Column + 1);
+            if(allDots[column + 1, row] != null){
+                otherDot = allDots[column + 1, row].GetComponent<Dot>();
+                // int tempColumn = otherDot.Column;
+                otherDot.SetColumn(otherDot.Column - 1);
+                dot.SetColumn(dot.Column + 1);
+            }
             
         } else if(swipeAngle > rightAngle && swipeAngle <= leftAngle && row < height-1)
         {
@@ -159,9 +164,12 @@ public class Board : MonoBehaviour
                 dot.GetComponent<Dot>().SetColumn(dot.PreviousColumn);
                 allDots[dot.Column, dot.Row] = dot.gameObject;
                 allDots[otherDot.Column, otherDot.Row] = otherDot.gameObject;
+            }else
+            {
+                DestroyMatches();
             }
-            otherDot = null;   
-        }   
+            otherDot = null;
+        }
         
     }
 
@@ -198,5 +206,54 @@ public class Board : MonoBehaviour
                 }
             }
         }
+    }
+    //Destroy gems in chosen row and column
+    private void DestroyMatchesAt(int column, int row)
+    {
+        if(allDots[column, row].GetComponent<Dot>().IsMatched)
+        {
+            Destroy(allDots[column, row]);
+            allDots[column, row] = null;
+        }
+    }
+
+    //Destroy all matched gems
+    public void DestroyMatches()
+    {
+        for(int i =0; i < width; i++)
+        {
+            for(int j = 0; j <height; j++)
+            {
+                if(allDots[i,j] != null)
+                {
+                    DestroyMatchesAt(i, j);
+                }
+            }
+        }
+        StartCoroutine(DecreaseRowCo());
+    }
+
+    //Coroutine for gems falling down after destroying
+     private IEnumerator DecreaseRowCo()
+    {   
+        //how much gems is null in the colunm
+        int nullCount = 0;
+        for(int i = 0; i <width; i++)
+        {
+            for(int j = 0; j <height; j++)
+            {
+                if(allDots[i, j] == null)
+                {
+                    nullCount++;
+                }else if(nullCount > 0)
+                {
+                    allDots[i,j].GetComponent<Dot>().SetRow(j - nullCount);
+                    allDots[i, j- nullCount] = allDots[i, j];
+                    allDots[i, j] = null;
+                }
+            }
+            nullCount = 0;
+        }
+        yield return new WaitForSeconds(.4f);
     }
 }
