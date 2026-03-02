@@ -68,8 +68,6 @@ public class Dot : MonoBehaviour
         //початкові координати
         targetX = (int)transform.position.x;
         targetY = (int)transform.position.y;
-        row = targetY;
-        column = targetX;
     }
 
     // Update is called once per frame
@@ -85,11 +83,12 @@ public class Dot : MonoBehaviour
         //update coordinates of point to new position
         targetX = column;
         targetY = row;
+        float speed = 5f;
         if(targetX != transform.position.x)
         {
             //Move Towards the target 
             tempPosition = new Vector2(targetX, transform.position.y);
-            transform.position = Vector2.Lerp(transform.position, tempPosition, .4f);
+            transform.position = Vector2.Lerp(transform.position, tempPosition, speed*Time.deltaTime);
             if(board.GetDot(column, row)!= this.gameObject)
             {
                 board.SetDots(column, row, this.gameObject);
@@ -99,7 +98,7 @@ public class Dot : MonoBehaviour
         {
             //Move Towards the target 
             tempPosition = new Vector2(transform.position.x, targetY);
-            transform.position = Vector2.Lerp(transform.position, tempPosition, .4f);
+            transform.position = Vector2.Lerp(transform.position, tempPosition, speed*Time.deltaTime);
         }
     }
     private void OnMouseDown()

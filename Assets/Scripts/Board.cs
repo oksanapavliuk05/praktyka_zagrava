@@ -57,6 +57,9 @@ public class Board : MonoBehaviour
                 }
                 maxIter = 0;
                 GameObject dot = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
+                //початкові координати
+                dot.GetComponent<Dot>().SetColumn(i);
+                dot.GetComponent<Dot>().SetRow(j);
                 dot.transform.parent = this.transform;
                 dot.name =  "(" + i + "," + j + ")";
                 allDots[i, j] = dot;
