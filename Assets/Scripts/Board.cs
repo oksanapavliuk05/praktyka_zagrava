@@ -178,6 +178,10 @@ public class Board : MonoBehaviour
     {
         int column = dot.Column;
         int row = dot.Row;
+        if(column<0 || column >= width || row < 0 || row >= height)
+        {
+            return;
+        }
         if(column > 0 && column < width - 1)
         {
             GameObject leftDot1 = allDots[column - 1, row];
@@ -234,7 +238,7 @@ public class Board : MonoBehaviour
     }
 
     //Coroutine for gems falling down after destroying
-     private IEnumerator DecreaseRowCo()
+    private IEnumerator DecreaseRowCo()
     {   
         //how much gems is null in the colunm
         int nullCount = 0;
@@ -255,5 +259,56 @@ public class Board : MonoBehaviour
             nullCount = 0;
         }
         yield return new WaitForSeconds(.4f);
+        StartCoroutine(FillBoardCo());
+    }
+
+    private void FillBoard()
+    {
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                if (allDots[i, j] == null)
+                { 
+                    //create a new dot to slide in from the top
+                    Vector2 newPosition = new Vector2(i, j + height);
+                    int dotToUse = Random.Range(0, dots.Length);
+                    GameObject dot = Instantiate(dots[dotToUse], newPosition, Quaternion.identity);
+                    dot.transform.parent = this.transform;
+                    dot.name =  "(" + i + "," + j + ")";
+                    dot.GetComponent<Dot>().SetColumn(i);
+                    dot.GetComponent<Dot>().SetRow(j);
+                    allDots[i, j] = dot;
+                }
+            }
+        }
+    }
+    //Check matches after fill the board
+    private bool CheckMatches()
+    {
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                if(allDots[i, j] != null)
+                {
+                    Dot dot = allDots[i, j].GetComponent<Dot>();
+                    if(dot.IsMatched)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    private IEnumerator FillBoardCo(){
+        FillBoard();
+        yield return new WaitForSeconds(.2f);
+        while (CheckMatches())
+        {
+            yield return new WaitForSeconds(.2f);
+            DestroyMatches();
+        }
     }
 }

@@ -33,6 +33,20 @@ public class Dot : MonoBehaviour
     {
         row = r;
     }
+    public void SetTargetX(int x)
+    {
+        targetX = x;
+    }
+    public void SetTargetY(int y)
+    {
+        targetY = y;
+    }
+    public int TargetX{
+        get{return targetX;}
+    }
+    public int TargetY{
+        get{return targetY;}
+    }
     public bool IsMatched{
         get{return isMatched;}
         set{isMatched = value;}
