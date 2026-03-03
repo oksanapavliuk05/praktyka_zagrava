@@ -99,6 +99,7 @@ public class Board : MonoBehaviour
 
     public void calculateAngle(Dot dot, Vector2 startTouchPosition, Vector2 endTouchPosition)
     {
+        dot.isSwipe = true;
         if(Mathf.Abs(endTouchPosition.y - startTouchPosition.y) > swipeResist || Mathf.Abs(endTouchPosition.x - startTouchPosition.x) > swipeResist)
         {        
             float swipeAngle = Mathf.Atan2(endTouchPosition.y - startTouchPosition.y, endTouchPosition.x - startTouchPosition.x) * 180 / Mathf.PI;
@@ -175,6 +176,65 @@ public class Board : MonoBehaviour
         }
         
     }
+    private void CreateBomb(Dot dot)
+    {
+        dot.IsBomb = true;
+        dot.IsMatched = false;
+        dot.isSwipe = false;
+        SpriteRenderer bs = dot.gameObject.GetComponent<SpriteRenderer>();
+        bs.sprite = dot.bombSprite;
+    }
+    public void FindBombVertical(Dot dot)
+    {
+        int column = dot.Column;
+        int row = dot.Row;
+        if(column > 0 && column < width - 1)
+        {
+            GameObject leftDot1 = allDots[column - 1, row];
+            GameObject rightDot1 = allDots[column + 1, row];
+            if(leftDot1 != null && rightDot1 != null && leftDot1.tag == dot.gameObject.tag && rightDot1.tag == dot.gameObject.tag)
+            {
+                leftDot1.GetComponent<Dot>().IsMatched = true;
+                rightDot1.GetComponent<Dot>().IsMatched = true;
+                dot.IsMatched = true;
+                    
+                if((column > 1 && allDots[column - 2, row] != null && allDots[column - 2, row].tag == dot.gameObject.tag) || (column < width - 2 && allDots[column + 2, row] != null && allDots[column + 2, row].tag == dot.gameObject.tag))
+                {
+                    if(dot.isSwipe)
+                    {
+                        CreateBomb(dot);
+                    }
+                }
+                
+            }
+        }
+    }
+
+    public void FindBombHorizontal(Dot dot)
+    {
+        int column = dot.Column;
+        int row = dot.Row;
+        if(row > 0 && row < height - 1)
+        {
+            GameObject leftDot1 = allDots[column, row- 1];
+            GameObject rightDot1 = allDots[column, row + 1];
+            if(leftDot1 != null && rightDot1 != null && leftDot1.tag == dot.gameObject.tag && rightDot1.tag == dot.gameObject.tag)
+            {
+                leftDot1.GetComponent<Dot>().IsMatched = true;
+                rightDot1.GetComponent<Dot>().IsMatched = true;
+                dot.IsMatched = true;
+                    
+                if((row > 1 && allDots[column, row - 2] != null && allDots[column, row - 2].tag == dot.gameObject.tag) || (row < height - 2 && allDots[column, row + 2] != null && allDots[column, row + 2].tag == dot.gameObject.tag))
+                {
+                    if(dot.isSwipe)
+                    {
+                        CreateBomb(dot);
+                    }
+                }
+                
+            }
+        }
+    }
 
     //Finding matches 3 in a row
     public void FindMatches(Dot dot)
@@ -189,14 +249,11 @@ public class Board : MonoBehaviour
         {
             GameObject leftDot1 = allDots[column - 1, row];
             GameObject rightDot1 = allDots[column + 1, row];
-            if(leftDot1 != null && rightDot1 != null)
+            if(leftDot1 != null && rightDot1 != null && leftDot1.tag == dot.gameObject.tag && rightDot1.tag == dot.gameObject.tag)
             {
-                if(leftDot1.tag == dot.gameObject.tag && rightDot1.tag == dot.gameObject.tag)
-                {
-                    leftDot1.GetComponent<Dot>().IsMatched = true;
-                    rightDot1.GetComponent<Dot>().IsMatched = true;
-                    dot.IsMatched = true;
-                }
+                leftDot1.GetComponent<Dot>().IsMatched = true;
+                rightDot1.GetComponent<Dot>().IsMatched = true;
+                dot.IsMatched = true;
             }
         }
         if(row > 0 && row < height - 1)
@@ -217,7 +274,7 @@ public class Board : MonoBehaviour
     //Destroy gems in chosen row and column
     private void DestroyMatchesAt(int column, int row)
     {
-        if(allDots[column, row].GetComponent<Dot>().IsMatched)
+        if(allDots[column, row].GetComponent<Dot>().IsMatched && !allDots[column, row].GetComponent<Dot>().IsBomb)
         {
             Destroy(allDots[column, row]);
             allDots[column, row] = null;

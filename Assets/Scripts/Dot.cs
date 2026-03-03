@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Dot : MonoBehaviour
 {   
+    //Bombs Sprites
+    public Sprite bombSprite;
+
     [Header("Board Variables")]
     private int column;
     private int row;
@@ -16,6 +19,8 @@ public class Dot : MonoBehaviour
     private Vector2 tempPosition;
 
     private bool  isMatched = false;
+    public bool isBomb = false;
+    public bool isSwipe = false;
     private int previousColumn;
     private int previousRow;  
 
@@ -51,6 +56,10 @@ public class Dot : MonoBehaviour
         get{return isMatched;}
         set{isMatched = value;}
     }
+    public bool IsBomb{
+        get{return isBomb;}
+        set{isBomb = value;}
+    }
 
     public int PreviousColumn{
         get{return previousColumn;}
@@ -66,8 +75,8 @@ public class Dot : MonoBehaviour
     {
         board  = FindObjectOfType<Board>();
         //початкові координати
-        targetX = (int)transform.position.x;
-        targetY = (int)transform.position.y;
+        // targetX = (int)transform.position.x;
+        // targetY = (int)transform.position.y;
     }
 
     // Update is called once per frame
@@ -75,10 +84,19 @@ public class Dot : MonoBehaviour
     {   
         //Finding matches
         board.FindMatches(this);
+        //Finding bombs
+        board.FindBombVertical(this);
+        board.FindBombHorizontal(this);
         if (isMatched)
         {
             SpriteRenderer mySprite = GetComponent<SpriteRenderer>();
             mySprite.color = new Color(0f, 0f, 0f, .2f);
+        }
+        //If the dot is a bomb, make it visible
+        if (isBomb)
+        {
+            SpriteRenderer mySprite = GetComponent<SpriteRenderer>();
+            mySprite.color = new Color(1f, 1f, 1f, 1f);
         }
         //update coordinates of point to new position
         targetX = column;
