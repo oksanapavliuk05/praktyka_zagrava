@@ -99,7 +99,7 @@ public class Board : MonoBehaviour
 
     public void calculateAngle(Dot dot, Vector2 startTouchPosition, Vector2 endTouchPosition)
     {
-        dot.isSwipe = true;
+        dot.IsSwipe = true;
         if(Mathf.Abs(endTouchPosition.y - startTouchPosition.y) > swipeResist || Mathf.Abs(endTouchPosition.x - startTouchPosition.x) > swipeResist)
         {        
             float swipeAngle = Mathf.Atan2(endTouchPosition.y - startTouchPosition.y, endTouchPosition.x - startTouchPosition.x) * 180 / Mathf.PI;
@@ -152,7 +152,38 @@ public class Board : MonoBehaviour
             allDots[dot.Column, dot.Row] = dot.gameObject;
             allDots[otherDot.Column, otherDot.Row] = otherDot.gameObject;
         }
+        //Explode bomb after swipe bomb
+        if(dot.IsBomb)
+        {
+            StartCoroutine(ExplodeBombCo(dot));
+            dot.IsBomb = false;
+        }
         StartCoroutine(CheckMoveCo(dot, otherDot));
+    }
+    //Check all gems in the board for exploding bomb    
+    private IEnumerator ExplodeBombCo(Dot dot)
+    {
+        yield return new WaitForSeconds(.3f);
+        if (dot.IsHorizontalBomb)
+        {
+            for(int i =0; i <width; i++)
+            {
+                if(allDots[i, dot.Row] != null)
+                { 
+                    allDots[i, dot.Row].GetComponent<Dot>().IsMatched = true;
+                }
+            }
+        }  
+        else
+        {
+            for(int j =0; j <height; j++)
+            {
+                if(allDots[dot.Column, j] != null)
+                {
+                    allDots[dot.Column, j].GetComponent<Dot>().IsMatched = true;
+                }
+            }
+        } 
     }
     //Move back if there are no matche
     public IEnumerator CheckMoveCo(Dot dot, Dot otherDot)
@@ -168,7 +199,8 @@ public class Board : MonoBehaviour
                 dot.GetComponent<Dot>().SetColumn(dot.PreviousColumn);
                 allDots[dot.Column, dot.Row] = dot.gameObject;
                 allDots[otherDot.Column, otherDot.Row] = otherDot.gameObject;
-            }else
+            }
+            else
             {
                 DestroyMatches();
             }
@@ -176,13 +208,18 @@ public class Board : MonoBehaviour
         }
         
     }
-    private void CreateBomb(Dot dot)
+    private void CreateBomb(Dot dot, bool isHorizontal)
     {
         dot.IsBomb = true;
         dot.IsMatched = false;
-        dot.isSwipe = false;
+        dot.IsSwipe = false;
         SpriteRenderer bs = dot.gameObject.GetComponent<SpriteRenderer>();
         bs.sprite = dot.bombSprite;
+        //Rotate bomb if it is horizontal
+        if(isHorizontal)
+        {
+            dot.transform.rotation = Quaternion.Euler(0, 0, 90);
+        }
     }
     public void FindBombVertical(Dot dot)
     {
@@ -200,9 +237,10 @@ public class Board : MonoBehaviour
                     
                 if((column > 1 && allDots[column - 2, row] != null && allDots[column - 2, row].tag == dot.gameObject.tag) || (column < width - 2 && allDots[column + 2, row] != null && allDots[column + 2, row].tag == dot.gameObject.tag))
                 {
-                    if(dot.isSwipe)
+                    dot.IsHorizontalBomb = true;
+                    if(dot.IsSwipe)
                     {
-                        CreateBomb(dot);
+                        CreateBomb(dot, dot.IsHorizontalBomb);
                     }
                 }
                 
@@ -226,12 +264,13 @@ public class Board : MonoBehaviour
                     
                 if((row > 1 && allDots[column, row - 2] != null && allDots[column, row - 2].tag == dot.gameObject.tag) || (row < height - 2 && allDots[column, row + 2] != null && allDots[column, row + 2].tag == dot.gameObject.tag))
                 {
-                    if(dot.isSwipe)
+                    dot.IsHorizontalBomb = false;
+                    if(dot.IsSwipe)
                     {
-                        CreateBomb(dot);
+                        CreateBomb(dot, dot.IsHorizontalBomb);
                     }
                 }
-                
+              
             }
         }
     }
