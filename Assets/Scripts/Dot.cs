@@ -11,6 +11,8 @@ public class Dot : MonoBehaviour
     private int row;
     private int targetX;
     private int targetY;
+    private int previousColumn;
+    private int previousRow;  
 
     private Board board;
     private GameObject otherDot;
@@ -19,10 +21,9 @@ public class Dot : MonoBehaviour
     private Vector2 tempPosition;
 
     private bool  isMatched = false;
-    public bool isBomb = false;
-    public bool isSwipe = false;
-    private int previousColumn;
-    private int previousRow;  
+    private bool isBomb = false;
+    private bool isHorizontalBomb = false;
+    private bool isSwipe = false;
 
     public int Column{
         get{ return column;}
@@ -59,6 +60,14 @@ public class Dot : MonoBehaviour
     public bool IsBomb{
         get{return isBomb;}
         set{isBomb = value;}
+    }
+    public bool IsHorizontalBomb{
+        get{return isHorizontalBomb;}
+        set{isHorizontalBomb = value;}
+    }
+    public bool IsSwipe{
+        get{return isSwipe;}
+        set{isSwipe = value;}
     }
 
     public int PreviousColumn{
