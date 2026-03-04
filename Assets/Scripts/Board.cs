@@ -12,7 +12,7 @@ public class Board : MonoBehaviour
     private GameObject[] dots;
     private GameObject[,] allDots;
     private BackgroundTile[,] allTiles; // масив для тайлів розміром нашого поля
-
+    private MatchFinder matchFinder;
     private float swipeResist = 1f;
     public int Width { 
         get {return width;} 
@@ -29,11 +29,12 @@ public class Board : MonoBehaviour
     public void SetDots(int column, int row, GameObject newDot) {
         allDots[column, row] = newDot;
     }
-
+    
     void Start()
     {
         allDots = new GameObject[width, height]; 
         allTiles = new BackgroundTile[width, height]; 
+        matchFinder = GetComponent<MatchFinder>();
         SetUp();
     }
     private void SetUp()
@@ -50,7 +51,7 @@ public class Board : MonoBehaviour
                 int dotToUse = Random.Range(0, dots.Length);
                 int maxIter = 0;
                 //Check if we have a match at the start
-                while(MatchesAt(i, j, dots[dotToUse]) && maxIter < 100)
+                while(matchFinder.MatchesAt(i, j, dots[dotToUse]) && maxIter < 100)
                 {
                     dotToUse = Random.Range(0, dots.Length);
                     maxIter++;  
@@ -66,37 +67,6 @@ public class Board : MonoBehaviour
             }
         }
     }
-    //Function to check if there are match ath the start
-    private bool MatchesAt(int column, int row, GameObject obj)
-    {
-        if(column >1 && row > 1)
-        {
-            if(allDots[column - 1, row].tag == obj.tag && allDots[column - 2, row].tag == obj.tag)
-            {
-                return true;
-            }
-            if(allDots[column, row-1].tag == obj.tag && allDots[column, row-2].tag == obj.tag)
-            {
-                return true;
-            }
-        } else if(column <= 1 || row <=1){
-            if(row > 1)
-            {
-                if(allDots[column, row-1].tag == obj.tag && allDots[column, row-2].tag == obj.tag)
-                {
-                    return true;
-                }
-            }else if (column > 1)
-            {
-                if(allDots[column - 1, row].tag == obj.tag && allDots[column - 2, row].tag == obj.tag)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public void calculateAngle(Dot dot, Vector2 startTouchPosition, Vector2 endTouchPosition)
     {
         dot.IsSwipe = true;
@@ -213,7 +183,7 @@ public class Board : MonoBehaviour
         }
         
     }
-    private void CreateBomb(Dot dot, bool isHorizontal)
+    public void CreateBomb(Dot dot, bool isHorizontal)
     {
         dot.IsBomb = true;
         dot.IsMatched = false;
@@ -226,95 +196,7 @@ public class Board : MonoBehaviour
             dot.transform.rotation = Quaternion.Euler(0, 0, 90);
         }
     }
-    public void FindBombVertical(Dot dot)
-    {
-        int column = dot.Column;
-        int row = dot.Row;
-        if(column > 0 && column < width - 1)
-        {
-            GameObject leftDot1 = allDots[column - 1, row];
-            GameObject rightDot1 = allDots[column + 1, row];
-            if(leftDot1 != null && rightDot1 != null && leftDot1.tag == dot.gameObject.tag && rightDot1.tag == dot.gameObject.tag)
-            {
-                leftDot1.GetComponent<Dot>().IsMatched = true;
-                rightDot1.GetComponent<Dot>().IsMatched = true;
-                dot.IsMatched = true;
-                    
-                if((column > 1 && allDots[column - 2, row] != null && allDots[column - 2, row].tag == dot.gameObject.tag) || (column < width - 2 && allDots[column + 2, row] != null && allDots[column + 2, row].tag == dot.gameObject.tag))
-                {
-                    dot.IsHorizontalBomb = true;
-                    if(dot.IsSwipe)
-                    {
-                        CreateBomb(dot, dot.IsHorizontalBomb);
-                    }
-                }
-                
-            }
-        }
-    }
-
-    public void FindBombHorizontal(Dot dot)
-    {
-        int column = dot.Column;
-        int row = dot.Row;
-        if(row > 0 && row < height - 1)
-        {
-            GameObject leftDot1 = allDots[column, row- 1];
-            GameObject rightDot1 = allDots[column, row + 1];
-            if(leftDot1 != null && rightDot1 != null && leftDot1.tag == dot.gameObject.tag && rightDot1.tag == dot.gameObject.tag)
-            {
-                leftDot1.GetComponent<Dot>().IsMatched = true;
-                rightDot1.GetComponent<Dot>().IsMatched = true;
-                dot.IsMatched = true;
-                    
-                if((row > 1 && allDots[column, row - 2] != null && allDots[column, row - 2].tag == dot.gameObject.tag) || (row < height - 2 && allDots[column, row + 2] != null && allDots[column, row + 2].tag == dot.gameObject.tag))
-                {
-                    dot.IsHorizontalBomb = false;
-                    if(dot.IsSwipe)
-                    {
-                        CreateBomb(dot, dot.IsHorizontalBomb);
-                    }
-                }
-              
-            }
-        }
-    }
-
-    //Finding matches 3 in a row
-    public void FindMatches(Dot dot)
-    {
-        int column = dot.Column;
-        int row = dot.Row;
-        if(column<0 || column >= width || row < 0 || row >= height)
-        {
-            return;
-        }
-        if(column > 0 && column < width - 1)
-        {
-            GameObject leftDot1 = allDots[column - 1, row];
-            GameObject rightDot1 = allDots[column + 1, row];
-            if(leftDot1 != null && rightDot1 != null && leftDot1.tag == dot.gameObject.tag && rightDot1.tag == dot.gameObject.tag)
-            {
-                leftDot1.GetComponent<Dot>().IsMatched = true;
-                rightDot1.GetComponent<Dot>().IsMatched = true;
-                dot.IsMatched = true;
-            }
-        }
-        if(row > 0 && row < height - 1)
-        {
-            GameObject upDot1 = allDots[column, row + 1];
-            GameObject downDot1 = allDots[column, row -1];
-            if(upDot1 != null && downDot1 != null)
-            {
-                if(upDot1.tag == dot.gameObject.tag && downDot1.tag == dot.gameObject.tag)
-                {
-                    upDot1.GetComponent<Dot>().IsMatched = true;
-                    downDot1.GetComponent<Dot>().IsMatched = true;
-                    dot.IsMatched = true;
-                }
-            }
-        }
-    }
+    
     //Destroy gems in chosen row and column
     private void DestroyMatchesAt(int column, int row)
     {
@@ -387,29 +269,10 @@ public class Board : MonoBehaviour
             }
         }
     }
-    //Check matches after fill the board
-    private bool CheckMatches()
-    {
-        for(int i = 0; i < width; i++)
-        {
-            for(int j = 0; j < height; j++)
-            {
-                if(allDots[i, j] != null)
-                {
-                    Dot dot = allDots[i, j].GetComponent<Dot>();
-                    if(dot.IsMatched)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
     private IEnumerator FillBoardCo(){
         FillBoard();
         yield return new WaitForSeconds(.2f);
-        while (CheckMatches())
+        while (matchFinder.CheckMatches())
         {
             yield return new WaitForSeconds(.2f);
             DestroyMatches();

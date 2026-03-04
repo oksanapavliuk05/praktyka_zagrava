@@ -15,6 +15,7 @@ public class Dot : MonoBehaviour
     private int previousRow;  
 
     private Board board;
+    private MatchFinder matchFinder;
     private GameObject otherDot;
     private Vector2 startTouchPosition;
     private Vector2 endTouchPosition;
@@ -82,7 +83,8 @@ public class Dot : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        board  = FindObjectOfType<Board>();
+        board  = Object.FindFirstObjectByType<Board>();;
+        matchFinder = Object.FindFirstObjectByType<MatchFinder>();;
         //початкові координати
         // targetX = (int)transform.position.x;
         // targetY = (int)transform.position.y;
@@ -92,10 +94,10 @@ public class Dot : MonoBehaviour
     void Update()
     {   
         //Finding matches
-        board.FindMatches(this);
+        matchFinder.FindMatches(this);
         //Finding bombs
-        board.FindBombVertical(this);
-        board.FindBombHorizontal(this);
+        matchFinder.FindBombVertical(this);
+        matchFinder.FindBombHorizontal(this);
         if (isMatched)
         {
             SpriteRenderer mySprite = GetComponent<SpriteRenderer>();
