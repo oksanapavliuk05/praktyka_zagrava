@@ -13,7 +13,9 @@ public class Board : MonoBehaviour
     private GameObject[,] allDots;
     private BackgroundTile[,] allTiles; // масив для тайлів розміром нашого поля
     private MatchFinder matchFinder;
+    private ScoreManager scoreManager;
     private float swipeResist = 1f;
+    private int matchScore = 20;
     public int Width { 
         get {return width;} 
     } 
@@ -35,6 +37,7 @@ public class Board : MonoBehaviour
         allDots = new GameObject[width, height]; 
         allTiles = new BackgroundTile[width, height]; 
         matchFinder = GetComponent<MatchFinder>();
+        scoreManager = Object.FindFirstObjectByType<ScoreManager>(); 
         SetUp();
     }
     private void SetUp()
@@ -185,6 +188,8 @@ public class Board : MonoBehaviour
     }
     public void CreateBomb(Dot dot, bool isHorizontal)
     {
+        //Increase score for create bomb 
+        scoreManager.IncreaseScore(40);
         dot.IsBomb = true;
         dot.IsMatched = false;
         dot.IsSwipe = false;
@@ -203,6 +208,7 @@ public class Board : MonoBehaviour
         if(allDots[column, row].GetComponent<Dot>().IsMatched && !allDots[column, row].GetComponent<Dot>().IsBomb)
         {
             Destroy(allDots[column, row]);
+            scoreManager.IncreaseScore(matchScore);
             allDots[column, row] = null;
         }
     }
