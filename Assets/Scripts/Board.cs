@@ -155,15 +155,20 @@ public class Board : MonoBehaviour
         //Explode bomb after swipe bomb
         if(dot.IsBomb)
         {
-            StartCoroutine(ExplodeBombCo(dot));
-            dot.IsBomb = false;
+            StartCoroutine(BombDelayCo(dot));
         }
         StartCoroutine(CheckMoveCo(dot, otherDot));
     }
-    //Check all gems in the board for exploding bomb    
-    private IEnumerator ExplodeBombCo(Dot dot)
+    private IEnumerator BombDelayCo(Dot dot)
     {
         yield return new WaitForSeconds(.3f);
+        ExplodeBombCo(dot);
+        dot.IsBomb = false;
+    }
+    //Check all gems in the board for exploding bomb    
+    private void ExplodeBombCo(Dot dot)
+    {
+        //yield return new WaitForSeconds(.3f);
         if (dot.IsHorizontalBomb)
         {
             for(int i =0; i <width; i++)
