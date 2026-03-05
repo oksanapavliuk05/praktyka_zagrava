@@ -14,6 +14,7 @@ public class Board : MonoBehaviour
     private BackgroundTile[,] allTiles; // масив для тайлів розміром нашого поля
     private MatchFinder matchFinder;
     private ScoreManager scoreManager;
+    private GoalManager goalManager;
     private float swipeResist = 1f;
     private int matchScore = 20;
     public int Width { 
@@ -38,6 +39,7 @@ public class Board : MonoBehaviour
         allTiles = new BackgroundTile[width, height]; 
         matchFinder = GetComponent<MatchFinder>();
         scoreManager = Object.FindFirstObjectByType<ScoreManager>(); 
+        goalManager = Object.FindFirstObjectByType<GoalManager>();
         SetUp();
     }
     private void SetUp()
@@ -167,6 +169,7 @@ public class Board : MonoBehaviour
     public IEnumerator CheckMoveCo(Dot dot, Dot otherDot)
     {
         yield return new WaitForSeconds(.5f);
+        goalManager.IncreaseMove();
         if(otherDot != null)
         {
             if(!dot.IsMatched && !otherDot.GetComponent<Dot>().IsMatched)
@@ -195,6 +198,7 @@ public class Board : MonoBehaviour
         dot.IsSwipe = false;
         SpriteRenderer bs = dot.gameObject.GetComponent<SpriteRenderer>();
         bs.sprite = dot.bombSprite;
+        goalManager.IncreaseClaimed(dot, 1);
         //Rotate bomb if it is horizontal
         if(isHorizontal)
         {
@@ -209,6 +213,7 @@ public class Board : MonoBehaviour
         {
             Destroy(allDots[column, row]);
             scoreManager.IncreaseScore(matchScore);
+            goalManager.IncreaseClaimed(allDots[column, row].GetComponent<Dot>(), 1);
             allDots[column, row] = null;
         }
     }
