@@ -21,9 +21,10 @@ public class Dot : MonoBehaviour
     private Vector2 endTouchPosition;
     private Vector2 tempPosition;
 
-    private bool  isMatched = false;
-    private bool isBomb = false;
+    public bool  isMatched = false;
+    public bool isBomb = false;
     private bool isHorizontalBomb = false;
+    public bool isColorBomb = false;
     private bool isSwipe = false;
 
     public int Column{
@@ -71,6 +72,11 @@ public class Dot : MonoBehaviour
         set{isSwipe = value;}
     }
 
+    public bool IsColorBomb
+    {
+        get{return isColorBomb;}
+        set{isColorBomb = value;}
+    }
     public int PreviousColumn{
         get{return previousColumn;}
         set{previousColumn = value;}
@@ -98,6 +104,7 @@ public class Dot : MonoBehaviour
         //Finding bombs
         matchFinder.FindBombVertical(this);
         matchFinder.FindBombHorizontal(this);
+        matchFinder.FindColorBomb(this);
         if (isMatched)
         {
             SpriteRenderer mySprite = GetComponent<SpriteRenderer>();

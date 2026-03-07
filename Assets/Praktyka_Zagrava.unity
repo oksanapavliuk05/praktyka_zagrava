@@ -1337,10 +1337,13 @@ MonoBehaviour:
   allGoals:
   - GoalSprite: {fileID: 8891180011573125036, guid: 4d619e68a36d4f1468f00bead04a1c49, type: 3}
     goalTag: Yellow Dot
+    numberNeeded: 3
   - GoalSprite: {fileID: -3105852924881301180, guid: a06a849269ebd6a4590b05310eebd6f4, type: 3}
     goalTag: Blue Dot
+    numberNeeded: 3
   - GoalSprite: {fileID: -3105852924881301180, guid: a06a849269ebd6a4590b05310eebd6f4, type: 3}
     goalTag: Green Dot
+    numberNeeded: 3
   goalPrefab: {fileID: 4635870883689199013, guid: 7d5d84e3295538340bcf58edbb2710f7, type: 3}
   goalIntroParent: {fileID: 459154223}
   movesText: {fileID: 1184020607}

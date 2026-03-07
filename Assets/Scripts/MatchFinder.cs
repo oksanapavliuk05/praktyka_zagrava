@@ -9,12 +9,6 @@ public class MatchFinder : MonoBehaviour
         board = Object.FindFirstObjectByType<Board>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    //Function to check if there are match ath the start
     public bool MatchesAt(int column, int row, GameObject obj)
     {
         if(column >1 && row > 1)
@@ -127,6 +121,28 @@ public class MatchFinder : MonoBehaviour
                     }
                 }
               
+            }
+        }
+    }
+
+    public void FindColorBomb(Dot dot)
+    {
+        int column = dot.Column;
+        int row = dot.Row;
+        
+        if(column >= 0 && row >=0 && row < board.Height - 1 && column <board.Width-1)
+        {
+            GameObject Dot2 = board.GetDot(column + 1, row);
+            GameObject Dot3 = board.GetDot(column + 1, row+1);
+            GameObject Dot4 = board.GetDot(column, row+1);
+            if(dot != null && Dot2 != null && Dot3 != null && Dot4 != null && Dot3.tag == dot.gameObject.tag && Dot2.tag == dot.gameObject.tag && Dot4.tag == dot.gameObject.tag)
+            {
+                Dot2.GetComponent<Dot>().IsMatched = true;
+                Dot3.GetComponent<Dot>().IsMatched = true;
+                Dot4.GetComponent<Dot>().IsMatched = true;
+                board.CreateColorBomb(dot);
+            
+                
             }
         }
     }

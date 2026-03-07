@@ -7,7 +7,7 @@ public class Goal
     public Sprite GoalSprite;
     [SerializeField]
     private string goalTag;
-    private int numberNeeded = 30;
+    public int numberNeeded = 0;
     private int numberClaimed = 0;
     public int NumberNeeded()
     {

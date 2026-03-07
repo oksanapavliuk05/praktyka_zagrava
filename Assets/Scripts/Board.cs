@@ -135,21 +135,45 @@ public class Board : MonoBehaviour
         //Explode bomb after swipe bomb
         if(dot.IsBomb)
         {
-            StartCoroutine(BombDelayCo(dot));
+            StartCoroutine(BombDelayCo(dot, otherDot));
         }
         StartCoroutine(CheckMoveCo(dot, otherDot));
     }
-    private IEnumerator BombDelayCo(Dot dot)
+    private IEnumerator BombDelayCo(Dot dot, Dot otherdot)
     {
         yield return new WaitForSeconds(.3f);
-        ExplodeBombCo(dot);
+        if(dot.IsColorBomb){
+            ExplodeBombCo(dot, otherdot);
+            dot.isMatched = true;
+        }
+        else
+        {
+            ExplodeBombCo(dot);
+        }
         dot.IsBomb = false;
+        dot.IsColorBomb = false;
     }
+    
     //Check all gems in the board for exploding bomb    
-    private void ExplodeBombCo(Dot dot)
+    private void ExplodeBombCo(Dot dot, Dot otherdot = null)
     {
         //yield return new WaitForSeconds(.3f);
-        if (dot.IsHorizontalBomb)
+        if (dot.IsColorBomb && otherdot !=null)
+        {
+            for(int i =0; i <width; i++)
+            {
+                for(int j = 0; j < height; j++)
+                {
+                    if(allDots[i, j] != null)
+                    {
+                        if(allDots[i, j].GetComponent<Dot>().tag == otherdot.tag)
+                        {
+                            allDots[i, j].GetComponent<Dot>().IsMatched = true;
+                        }
+                    }
+                }
+            }
+        } else if (dot.IsHorizontalBomb)
         {
             for(int i =0; i <width; i++)
             {
@@ -159,7 +183,7 @@ public class Board : MonoBehaviour
                 }
             }
         }  
-        else
+        else if (dot.IsBomb && !dot.IsColorBomb)
         {
             for(int j =0; j <height; j++)
             {
@@ -211,6 +235,19 @@ public class Board : MonoBehaviour
         }
     }
     
+    public void CreateColorBomb(Dot dot)
+    {
+        //Increase score for create bomb 
+        scoreManager.IncreaseScore(40);
+        dot.IsBomb = true;
+        dot.IsMatched = false;
+        dot.IsSwipe = false;
+        dot.IsColorBomb = true;
+        SpriteRenderer bs = dot.gameObject.GetComponent<SpriteRenderer>();
+        bs.sprite = dot.bombSprite;
+        goalManager.IncreaseClaimed(dot);
+        dot.transform.rotation = Quaternion.Euler(0, 0, 45);
+    }
     //Destroy gems in chosen row and column
     private void DestroyMatchesAt(int column, int row)
     {
