@@ -1,18 +1,28 @@
 using UnityEngine;
 using UnityEngine.UI;
-public class Goal : MonoBehaviour
-{
-    
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+[System.Serializable]
+public class Goal 
+{    
+    private bool isDone;
+    public Sprite GoalSprite;
+    [SerializeField]
+    private string goalTag;
+    private int numberNeeded = 30;
+    private int numberClaimed = 0;
+    public int NumberNeeded()
     {
-        
+        return numberNeeded;
     }
-
-    // Update is called once per frame
-    void Update()
+    public int NumberClaimed()
     {
-        
+        return numberClaimed;
+    }
+    public string GoalTag()
+    {
+        return goalTag;
+    }
+    public int Increase()
+    {
+        return numberClaimed++;
     }
 }

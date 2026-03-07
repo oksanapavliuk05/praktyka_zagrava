@@ -1,53 +1,53 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 public class GoalManager : MonoBehaviour
 {
     [SerializeField]
-    public Text movesText;
-    // private string typeOfGoal;
-    
+    private Goal[] allGoals;
     [SerializeField]
-    private GameObject Sprite;
+    private GameObject goalPrefab;
+    [SerializeField]
+    private GameObject goalIntroParent;
+    [SerializeField]
+    private TMP_Text movesText;
     private int movesClaimed = 30;
     private bool isDone;
-    
-    [SerializeField]
-    public Text goalText;
-    [SerializeField]
-    public Sprite GoalSprite;
-    [SerializeField]
-    public string goalTag;
-    public int numberNeeded = 30;
-    public int numberClaimed = 0;
+    private GoalPanel[] allPanel;
     void Start()
     {
-        Image sp = Sprite.GetComponent<Image>();
-        sp.sprite = GoalSprite;
-
+        allPanel = new GoalPanel[allGoals.Length];
+        for(int i = 0; i<allGoals.Length; i++)
+        {
+            GameObject goal = Instantiate(goalPrefab, goalIntroParent.transform);       
+            GoalPanel panel = goal.GetComponent<GoalPanel>();
+            panel.thisSprite = allGoals[i].GoalSprite;
+            panel.UpdateText(allGoals[i].NumberClaimed(), allGoals[i].NumberNeeded());
+            allPanel[i] = panel;
+        }
     }
-
-    // Update is called once per frame
     void Update()
     {
-        if(numberClaimed >= numberNeeded)
+        for(int i = 0; i<allGoals.Length; i++)
         {
-            goalText.text = "Done!";
-        }else if(movesClaimed <=0)
-        {
-            movesText.text = "Lose!";
-        }
-        else
-        {
-            goalText.text = numberClaimed.ToString() + "/" + numberNeeded.ToString();
-            movesText.text = movesClaimed.ToString();
+            if(movesClaimed <=0)
+            {
+                movesText.text = "Lose!";
+            }
+            else
+            {
+                allPanel[i].UpdateText(allGoals[i].NumberClaimed(), allGoals[i].NumberNeeded());
+                movesText.text = movesClaimed.ToString();
+            }
         }
     }
-    public void IncreaseClaimed(Dot dot, int value=1)
+    public void IncreaseClaimed(Dot dot)
     {
-        if(dot.tag == goalTag)
+        for(int i = 0; i<allGoals.Length; i++)
         {
-            numberClaimed += value;
-            
+            if(dot.tag == allGoals[i].GoalTag())
+            {
+                allGoals[i].Increase();
+            }
         }
     }
     public void IncreaseMove()

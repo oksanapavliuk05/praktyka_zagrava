@@ -38,6 +38,11 @@ public class Board : MonoBehaviour
         allDots = new GameObject[width, height]; 
         allTiles = new BackgroundTile[width, height]; 
         matchFinder = GetComponent<MatchFinder>();
+        if (matchFinder == null)
+        {
+            matchFinder = gameObject.AddComponent<MatchFinder>();
+        }
+        matchFinder.Start();
         scoreManager = Object.FindFirstObjectByType<ScoreManager>(); 
         goalManager = Object.FindFirstObjectByType<GoalManager>();
         SetUp();
@@ -198,7 +203,7 @@ public class Board : MonoBehaviour
         dot.IsSwipe = false;
         SpriteRenderer bs = dot.gameObject.GetComponent<SpriteRenderer>();
         bs.sprite = dot.bombSprite;
-        goalManager.IncreaseClaimed(dot, 1);
+        goalManager.IncreaseClaimed(dot);
         //Rotate bomb if it is horizontal
         if(isHorizontal)
         {
@@ -213,7 +218,7 @@ public class Board : MonoBehaviour
         {
             Destroy(allDots[column, row]);
             scoreManager.IncreaseScore(matchScore);
-            goalManager.IncreaseClaimed(allDots[column, row].GetComponent<Dot>(), 1);
+            goalManager.IncreaseClaimed(allDots[column, row].GetComponent<Dot>());
             allDots[column, row] = null;
         }
     }
