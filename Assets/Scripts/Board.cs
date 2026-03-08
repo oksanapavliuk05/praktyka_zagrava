@@ -133,7 +133,7 @@ public class Board : MonoBehaviour
             allDots[otherDot.Column, otherDot.Row] = otherDot.gameObject;
         }
         //Explode bomb after swipe bomb
-        if(dot.IsBomb)
+        if(dot.IsBomb || otherDot.IsBomb)
         {
             StartCoroutine(BombDelayCo(dot, otherDot));
         }
@@ -145,6 +145,14 @@ public class Board : MonoBehaviour
         if(dot.IsColorBomb){
             ExplodeBombCo(dot, otherdot);
             dot.isMatched = true;
+        }else if(otherdot.IsColorBomb && otherdot !=null)
+        {
+            ExplodeBombCo(otherdot, dot);
+            otherdot.isMatched = true;
+        }
+        else if(otherdot.IsBomb)
+        {
+            ExplodeBombCo(otherdot);
         }
         else
         {
@@ -152,6 +160,8 @@ public class Board : MonoBehaviour
         }
         dot.IsBomb = false;
         dot.IsColorBomb = false;
+        otherdot.IsBomb = false;
+        otherdot.IsColorBomb = false;
     }
     
     //Check all gems in the board for exploding bomb    
