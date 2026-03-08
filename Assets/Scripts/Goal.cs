@@ -21,8 +21,17 @@ public class Goal
     {
         return goalTag;
     }
+    public bool IsDone()
+    {
+        return isDone;
+    }
     public int Increase()
     {
-        return numberClaimed++;
+        numberClaimed += 1;
+        if(numberClaimed >= numberNeeded)
+        {
+            isDone = true;
+        }
+        return numberClaimed;
     }
 }

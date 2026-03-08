@@ -10,7 +10,7 @@ public class GoalManager : MonoBehaviour
     private GameObject goalIntroParent;
     [SerializeField]
     private TMP_Text movesText;
-    private int movesClaimed = 30;
+    private int movesClaimed = 10;
     private bool isDone;
     private GoalPanel[] allPanel;
     void Start()
@@ -25,18 +25,38 @@ public class GoalManager : MonoBehaviour
             allPanel[i] = panel;
         }
     }
+
+    private bool IsWin()
+    {
+        for(int i = 0; i < allGoals.Length; i++)
+        {
+            if (!allGoals[i].IsDone())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     void Update()
     {
         for(int i = 0; i<allGoals.Length; i++)
         {
-            if(movesClaimed <=0)
+            if(movesClaimed <=0 && !allGoals[i].IsDone())
             {
                 movesText.text = "Lose!";
             }
             else
             {
                 allPanel[i].UpdateText(allGoals[i].NumberClaimed(), allGoals[i].NumberNeeded());
-                movesText.text = movesClaimed.ToString();
+                if(IsWin())
+                {
+                    movesText.text = "Win";
+                }
+                else
+                {
+                    movesText.text = movesClaimed.ToString();
+                }
             }
         }
     }

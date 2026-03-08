@@ -198,7 +198,6 @@ public class Board : MonoBehaviour
     public IEnumerator CheckMoveCo(Dot dot, Dot otherDot)
     {
         yield return new WaitForSeconds(.5f);
-        goalManager.IncreaseMove();
         if(otherDot != null)
         {
             if(!dot.IsMatched && !otherDot.GetComponent<Dot>().IsMatched)
@@ -212,6 +211,7 @@ public class Board : MonoBehaviour
             }
             else
             {
+                goalManager.IncreaseMove();
                 DestroyMatches();
             }
             otherDot = null;
