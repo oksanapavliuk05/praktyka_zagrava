@@ -25,7 +25,7 @@ public class Dot : MonoBehaviour
     public bool isBomb = false;
     private bool isHorizontalBomb = false;
     public bool isColorBomb = false;
-    private bool isSwipe = false;
+    public bool isSwipe = false;
 
     public int Column{
         get{ return column;}

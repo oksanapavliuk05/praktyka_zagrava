@@ -140,9 +140,8 @@ public class MatchFinder : MonoBehaviour
                 Dot2.GetComponent<Dot>().IsMatched = true;
                 Dot3.GetComponent<Dot>().IsMatched = true;
                 Dot4.GetComponent<Dot>().IsMatched = true;
+                dot.IsMatched = false;
                 board.CreateColorBomb(dot);
-            
-                
             }
         }
     }

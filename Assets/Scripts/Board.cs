@@ -200,7 +200,7 @@ public class Board : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         if(otherDot != null)
         {
-            if(!dot.IsMatched && !otherDot.GetComponent<Dot>().IsMatched)
+            if(!dot.IsMatched && !otherDot.GetComponent<Dot>().IsMatched && !dot.GetComponent<Dot>().isColorBomb)
             {
                 otherDot.GetComponent<Dot>().SetRow(dot.Row);
                 otherDot.GetComponent<Dot>().SetColumn(dot.Column);
@@ -249,14 +249,19 @@ public class Board : MonoBehaviour
         dot.transform.rotation = Quaternion.Euler(0, 0, 45);
     }
     //Destroy gems in chosen row and column
-    private void DestroyMatchesAt(int column, int row)
+    public void DestroyMatchesAt(int column, int row)
     {
-        if(allDots[column, row].GetComponent<Dot>().IsMatched && !allDots[column, row].GetComponent<Dot>().IsBomb)
+        if(allDots[column, row] != null)
         {
-            Destroy(allDots[column, row]);
-            scoreManager.IncreaseScore(matchScore);
-            goalManager.IncreaseClaimed(allDots[column, row].GetComponent<Dot>());
-            allDots[column, row] = null;
+            if(allDots[column, row].GetComponent<Dot>().IsMatched && !allDots[column, row].GetComponent<Dot>().IsBomb)
+            {
+                scoreManager.IncreaseScore(matchScore);               
+                goalManager.IncreaseClaimed(allDots[column, row].GetComponent<Dot>());
+
+                Destroy(allDots[column, row]);
+                allDots[column, row] = null;
+                SetDots(column, row, null);
+            }
         }
     }
 
@@ -277,7 +282,7 @@ public class Board : MonoBehaviour
     }
 
     //Coroutine for gems falling down after destroying
-    private IEnumerator DecreaseRowCo()
+    public IEnumerator DecreaseRowCo()
     {   
         //how much gems is null in the colunm
         int nullCount = 0;
