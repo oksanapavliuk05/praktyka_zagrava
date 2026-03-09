@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     }
     public void MainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("LevelMap");
     }
     public void PauseMode()
     {
