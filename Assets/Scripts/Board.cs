@@ -1,7 +1,14 @@
 using UnityEngine;
 using System.Collections;
+
+public enum GameState
+{
+    wait, 
+    move
+}
 public class Board : MonoBehaviour
 {
+    public GameState currentState = GameState.move;
     [SerializeField]
     private int width;
     [SerializeField]
@@ -84,6 +91,11 @@ public class Board : MonoBehaviour
         {        
             float swipeAngle = Mathf.Atan2(endTouchPosition.y - startTouchPosition.y, endTouchPosition.x - startTouchPosition.x) * 180 / Mathf.PI;
             MovePieces(dot, swipeAngle);
+            currentState = GameState.wait;
+        }
+        else
+        {
+            currentState = GameState.move;
         }
     }
     public void MovePieces(Dot dot, float swipeAngle)
@@ -202,7 +214,10 @@ public class Board : MonoBehaviour
                     allDots[dot.Column, j].GetComponent<Dot>().IsMatched = true;
                 }
             }
-        } 
+        } // yield return new WaitForSeconds(.5f);
+        currentState = GameState.move;
+        
+        
     }
     //Move back if there are no matche
     public IEnumerator CheckMoveCo(Dot dot, Dot otherDot)
@@ -218,18 +233,29 @@ public class Board : MonoBehaviour
                 dot.GetComponent<Dot>().SetColumn(dot.PreviousColumn);
                 allDots[dot.Column, dot.Row] = dot.gameObject;
                 allDots[otherDot.Column, otherDot.Row] = otherDot.gameObject;
+            
+                yield return new WaitForSeconds(.5f);
+                currentState = GameState.move;
             }
             else
             {
                 goalManager.IncreaseMove();
                 DestroyMatches();
+                yield return new WaitForSeconds(.5f);
+                currentState = GameState.move;
             }
             otherDot = null;
+        }
+        else
+        {
+            yield return new WaitForSeconds(.5f);
+            currentState = GameState.move;
         }
         
     }
     public void CreateBomb(Dot dot, bool isHorizontal)
     {
+        currentState = GameState.wait;
         //Increase score for create bomb 
         scoreManager.IncreaseScore(40);
         dot.IsBomb = true;
@@ -345,5 +371,7 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(.2f);
             DestroyMatches();
         }
+        yield return new WaitForSeconds(.5f);
+        currentState = GameState.move;
     }
 }

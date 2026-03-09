@@ -21,6 +21,7 @@ public class Dot : MonoBehaviour
     private Vector2 endTouchPosition;
     private Vector2 tempPosition;
 
+
     public bool  isMatched = false;
     public bool isBomb = false;
     private bool isHorizontalBomb = false;
@@ -139,13 +140,19 @@ public class Dot : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        startTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if(board.currentState == GameState.move)
+        {
+            startTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        }
     }
 
     private void OnMouseUp()
     {
-        endTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        board.calculateAngle(this, startTouchPosition, endTouchPosition);
+        if(board.currentState == GameState.move)
+        {
+            endTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            board.calculateAngle(this, startTouchPosition, endTouchPosition);  
+        }
     }
     
 }
