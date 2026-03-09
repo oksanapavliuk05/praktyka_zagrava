@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public enum GameState
-{
+{   
     wait, 
     move
 }

@@ -13,8 +13,11 @@ public class GoalManager : MonoBehaviour
     private int movesClaimed = 10;
     private bool isDone;
     private GoalPanel[] allPanel;
+    private GameManager gameManager;
     void Start()
     {
+        gameManager = FindFirstObjectByType<GameManager>();
+        gameManager.Start();
         allPanel = new GoalPanel[allGoals.Length];
         for(int i = 0; i<allGoals.Length; i++)
         {
@@ -45,6 +48,7 @@ public class GoalManager : MonoBehaviour
             if(movesClaimed <=0 && !allGoals[i].IsDone())
             {
                 movesText.text = "Lose!";
+                gameManager.LoseGame();
             }
             else
             {
@@ -52,6 +56,7 @@ public class GoalManager : MonoBehaviour
                 if(IsWin())
                 {
                     movesText.text = "Win";
+                    gameManager.WinGame();
                 }
                 else
                 {
