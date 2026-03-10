@@ -8,11 +8,18 @@ public class GameManager : MonoBehaviour
     private GameObject losePanel;
     [SerializeField]
     private GameObject pausePanel;
+    [SerializeField]
+    private GameObject startPanel;
     private Board board;
 
     public void Start()
     {
         board = FindFirstObjectByType<Board>();
+    }
+    public void StartPanel()
+    {
+        startPanel.SetActive(false);
+        board.currentState = GameState.move;
     }
 
     public void WinGame()
