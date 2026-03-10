@@ -1,23 +1,35 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField]
     private TMP_Text heartText;
-    private int hearts;
-    void Start()
-    {
-        hearts = 5;
-    }
+    private static int hearts = 5;
+    private int maxHearts = 10;
+    private float everytime = 108000f; 
+    private static float timer;
 
     void Update()
     {
         heartText.text = hearts.ToString();
+
+        if(hearts < maxHearts)
+        {
+            timer += Time.deltaTime;
+
+            if(timer >= everytime)
+            {
+                hearts++;
+                timer = 0;
+            }
+        }
     }
     public void StartLevel()
     {
         hearts--;
+        timer = 0;
         SceneManager.LoadScene("Level");
     }
     public void PlayStory()
