@@ -6,15 +6,15 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField]
     private TMP_Text heartText;
-    private static int hearts = 5;
+    public static int hearts = 5;
     private int maxHearts = 10;
     private float everytime = 108000f; 
-    private static float timer;
+    public static float timer;
 
     void Update()
     {
         heartText.text = hearts.ToString();
-
+        
         if(hearts < maxHearts)
         {
             timer += Time.deltaTime;
@@ -25,12 +25,6 @@ public class LevelManager : MonoBehaviour
                 timer = 0;
             }
         }
-    }
-    public void StartLevel()
-    {
-        hearts--;
-        timer = 0;
-        SceneManager.LoadScene("Level");
     }
     public void PlayStory()
     {

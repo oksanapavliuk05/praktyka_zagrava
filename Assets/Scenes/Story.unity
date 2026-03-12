@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 148368860}
   - component: {fileID: 148368862}
   m_Layer: 5
-  m_Name: Character2
+  m_Name: Moore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -950,7 +950,7 @@ GameObject:
   - component: {fileID: 1028769628}
   - component: {fileID: 1028769627}
   m_Layer: 5
-  m_Name: MainCharacter_2
+  m_Name: Carter_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1418,7 +1418,7 @@ GameObject:
   - component: {fileID: 1567971861}
   - component: {fileID: 1567971863}
   m_Layer: 5
-  m_Name: MainCharacter
+  m_Name: Carter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1440,7 +1440,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -200, y: 200}
+  m_AnchoredPosition: {x: -200.00003, y: 200}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1567971861
@@ -1515,7 +1515,7 @@ GameObject:
   - component: {fileID: 1683292795}
   - component: {fileID: 1683292794}
   m_Layer: 5
-  m_Name: Character2_2
+  m_Name: Moore2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
