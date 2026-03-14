@@ -3,10 +3,13 @@ using UnityEngine;
 public class MatchFinder : MonoBehaviour
 {
     private Board board;
+    private ScoreManager scoreManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void Start()
     {
         board = Object.FindFirstObjectByType<Board>();
+        
+        scoreManager = Object.FindFirstObjectByType<ScoreManager>(); 
     }
 
     public bool MatchesAt(int column, int row, GameObject obj)
@@ -117,6 +120,7 @@ public class MatchFinder : MonoBehaviour
                     dot.IsHorizontalBomb = false;
                     if(dot.IsSwipe)
                     {
+                        scoreManager.IncreaseScore(40);
                         board.CreateBomb(dot, dot.IsHorizontalBomb);
                     }
                 }
@@ -129,19 +133,41 @@ public class MatchFinder : MonoBehaviour
     {
         int column = dot.Column;
         int row = dot.Row;
-        
         if(column >= 0 && row >=0 && row < board.Height - 1 && column <board.Width-1)
         {
-            GameObject Dot2 = board.GetDot(column + 1, row);
-            GameObject Dot3 = board.GetDot(column + 1, row+1);
-            GameObject Dot4 = board.GetDot(column, row+1);
-            if(dot != null && Dot2 != null && Dot3 != null && Dot4 != null && Dot3.tag == dot.gameObject.tag && Dot2.tag == dot.gameObject.tag && Dot4.tag == dot.gameObject.tag)
+            if(row< board.Height-1 && column < board.Width - 1)
             {
-                Dot2.GetComponent<Dot>().IsMatched = true;
-                Dot3.GetComponent<Dot>().IsMatched = true;
-                Dot4.GetComponent<Dot>().IsMatched = true;
-                dot.IsMatched = false;
-                board.CreateColorBomb(dot);
+                GameObject Dot2 = board.GetDot(column + 1, row);
+                GameObject Dot3 = board.GetDot(column + 1, row+1);
+                GameObject Dot4 = board.GetDot(column, row+1);
+                if(dot != null && Dot2 != null && Dot3 != null && Dot4 != null && Dot3.tag == dot.gameObject.tag && Dot2.tag == dot.gameObject.tag && Dot4.tag == dot.gameObject.tag)
+                {
+                    Dot2.GetComponent<Dot>().IsMatched = true;
+                    Dot3.GetComponent<Dot>().IsMatched = true;
+                    Dot4.GetComponent<Dot>().IsMatched = true;
+                    dot.IsMatched = false;
+                    if(!dot.IsHorizontalBomb && !Dot2.GetComponent<Dot>().IsHorizontalBomb && !Dot3.GetComponent<Dot>().IsHorizontalBomb && !Dot4.GetComponent<Dot>().IsHorizontalBomb)
+                    {
+                        board.CreateColorBomb(dot);
+                    }
+                }
+            }else if(column > 0 && row > 0)
+            {
+                GameObject Dot2 = board.GetDot(column - 1, row);
+                GameObject Dot3 = board.GetDot(column - 1, row-1);
+                GameObject Dot4 = board.GetDot(column, row-1);
+                if(dot != null && Dot2 != null && Dot3 != null && Dot4 != null && Dot3.tag == dot.gameObject.tag && Dot2.tag == dot.gameObject.tag && Dot4.tag == dot.gameObject.tag)
+                {
+                    Dot2.GetComponent<Dot>().IsMatched = true;
+                    Dot3.GetComponent<Dot>().IsMatched = true;
+                    Dot4.GetComponent<Dot>().IsMatched = true;
+                    dot.IsMatched = false;
+                    if(!dot.IsHorizontalBomb && !Dot2.GetComponent<Dot>().IsHorizontalBomb && !Dot3.GetComponent<Dot>().IsHorizontalBomb && !Dot4.GetComponent<Dot>().IsHorizontalBomb)
+                    {
+                        board.CreateColorBomb(dot);
+                    }
+                }
+                
             }
         }
     }

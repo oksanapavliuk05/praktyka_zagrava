@@ -15,16 +15,19 @@ public class LevelButton : MonoBehaviour
     public TMP_Text  levelText;
     public int level;
     public string levelToLoad;
+    private GameData gameData;
     void Awake()
     {
         buttonImage = GetComponent<Image>();
         myButton = GetComponent<Button>();
+        gameData = GameData.gameData;
     }
     public void SetUp(int level)
     {
-        isActive = true;
-        level++;
-        levelText.text = level.ToString();
+        // isActive = true;
+        this.level = level + 1;
+        levelText.text = this.level.ToString();
+        LoadData();
         DecideSprite(); 
 
     }
@@ -46,6 +49,20 @@ public class LevelButton : MonoBehaviour
         }
     }
 
+    void LoadData()
+    {
+        if(gameData != null)
+        {
+            if (gameData.saveData.isActive[level - 1])
+            {
+                isActive = true;
+            }
+            else
+            {
+                isActive=false;
+            }
+        }
+    }
     public void StartLevel()
     {
         if(LevelManager.hearts > 0)

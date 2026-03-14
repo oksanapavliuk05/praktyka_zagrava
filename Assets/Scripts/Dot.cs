@@ -105,7 +105,7 @@ public class Dot : MonoBehaviour
         //Finding bombs
         matchFinder.FindBombVertical(this);
         matchFinder.FindBombHorizontal(this);
-        // matchFinder.FindColorBomb(this);
+        matchFinder.FindColorBomb(this);
         if (isMatched)
         {
             SpriteRenderer mySprite = GetComponent<SpriteRenderer>();

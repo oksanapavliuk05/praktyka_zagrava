@@ -257,7 +257,7 @@ public class Board : MonoBehaviour
     {
         currentState = GameState.wait;
         //Increase score for create bomb 
-        scoreManager.IncreaseScore(40);
+        // scoreManager.IncreaseScore(40);
         dot.IsBomb = true;
         dot.IsMatched = false;
         dot.IsSwipe = false;
@@ -274,7 +274,7 @@ public class Board : MonoBehaviour
     public void CreateColorBomb(Dot dot)
     {
         //Increase score for create bomb 
-        scoreManager.IncreaseScore(40);
+        // scoreManager.IncreaseScore(40);
         dot.IsBomb = true;
         dot.IsMatched = false;
         dot.IsSwipe = false;

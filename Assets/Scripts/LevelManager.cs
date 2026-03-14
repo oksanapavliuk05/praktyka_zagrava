@@ -30,15 +30,4 @@ public class LevelManager : MonoBehaviour
     {
         SceneManager.LoadScene("Story");
     }
-    public void StartGame()
-    {
-        SceneManager.LoadScene("LevelMap");
-    }
-    public void Exit()
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
-            Application.Quit();
-    }
 }

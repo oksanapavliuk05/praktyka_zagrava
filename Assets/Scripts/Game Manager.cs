@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     private GameObject pausePanel;
     [SerializeField]
     private GameObject startPanel;
-    private Board board;
+    private Board board;    
 
     public void Start()
     {
