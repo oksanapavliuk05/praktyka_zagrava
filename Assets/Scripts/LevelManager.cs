@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
     private int maxHearts = 10;
     private float everytime = 108000f; 
     public static float timer;
+    public static int currentLevel;
 
     void Update()
     {
@@ -25,9 +26,5 @@ public class LevelManager : MonoBehaviour
                 timer = 0;
             }
         }
-    }
-    public void PlayStory()
-    {
-        SceneManager.LoadScene("Story");
     }
 }

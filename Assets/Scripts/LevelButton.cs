@@ -7,8 +7,10 @@ using UnityEngine.SceneManagement;
 public class LevelButton : MonoBehaviour
 {
     public bool isActive;
+    public bool isFinished;
     private Color activeColor = new Color(1f, 1f, 1f, 1f);
     private Color lockedColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+    private Color checkedColor = new Color(0f, 1f, 0f, 1f);
     private Image buttonImage;
     public Button myButton;
     //ui text
@@ -34,7 +36,12 @@ public class LevelButton : MonoBehaviour
 
     void DecideSprite()
     {
-        if (isActive)
+        if (isFinished)
+        {
+            buttonImage.color = checkedColor;
+            myButton.enabled  = false;
+            
+        }else if (isActive)
         {
             buttonImage.color = activeColor;
             myButton.enabled  = true;
@@ -53,14 +60,9 @@ public class LevelButton : MonoBehaviour
     {
         if(gameData != null)
         {
-            if (gameData.saveData.isActive[level - 1])
-            {
-                isActive = true;
-            }
-            else
-            {
-                isActive=false;
-            }
+            isActive = gameData.saveData.isActive[level - 1];
+            isFinished = gameData.saveData.isFinished[level - 1];
+            
         }
     }
     public void StartLevel()
@@ -69,6 +71,7 @@ public class LevelButton : MonoBehaviour
         {
             LevelManager.hearts--;
             LevelManager.timer = 0;
+            LevelManager.currentLevel = level;
             // level++;
             levelToLoad = "Level " + level;
             SceneManager.LoadScene(levelToLoad);

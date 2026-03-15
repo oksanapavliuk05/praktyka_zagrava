@@ -1367,8 +1367,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2129724436}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+      - m_Target: {fileID: 2129724441}
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
         m_MethodName: PlayStory
         m_Mode: 1
         m_Arguments:
@@ -1862,7 +1862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelPrefab: {fileID: 272237498936310892, guid: 6635f14609038bc48b5f586b2774fc24, type: 3}
-  numberLevels: 4
+  numberLevels: 5
 --- !u!1 &1868761275
 GameObject:
   m_ObjectHideFlags: 0
@@ -2450,6 +2450,7 @@ GameObject:
   - component: {fileID: 2129724438}
   - component: {fileID: 2129724437}
   - component: {fileID: 2129724436}
+  - component: {fileID: 2129724441}
   m_Layer: 5
   m_Name: LevelManager
   m_TagString: Untagged
@@ -2557,6 +2558,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &2129724441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129724435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6ed140fc3de95449bf0c2de530553d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

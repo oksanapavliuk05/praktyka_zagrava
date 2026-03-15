@@ -4,7 +4,7 @@ public class LevelSpawner : MonoBehaviour
 {
     [SerializeField]
     private GameObject levelPrefab;
-    public int numberLevels = 2;
+    public int numberLevels = 5;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

@@ -34,14 +34,6 @@ public class GameManager : MonoBehaviour
         board.currentState = GameState.wait;
     }
 
-    public void Retry()
-    {
-        SceneManager.LoadScene("Level");
-    }
-    public void MainMenu()
-    {
-        SceneManager.LoadScene("LevelMap");
-    }
     public void PauseMode()
     {
         pausePanel.SetActive(true);

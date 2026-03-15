@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 [Serializable]
 public class SaveData{
     public bool[] isActive;
+    public bool[] isFinished;
 }
 
 public class GameData : MonoBehaviour
@@ -61,6 +62,6 @@ public class GameData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Save();
+        // Save();
     }
 }

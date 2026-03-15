@@ -12,14 +12,16 @@ public class GoalManager : MonoBehaviour
     private GameObject goalGameParent;
     [SerializeField]
     private TMP_Text movesText;
-    private int movesClaimed = 10;
+    private int movesClaimed = 30;
     private bool isDone;
     private GoalPanel[] allPanel;
     private GoalPanel[] gamePanels;
     private GameManager gameManager;
+    private GameData gameData;
     void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>();
+        gameData = GameData.gameData;
         // gameManager.Start();
         allPanel = new GoalPanel[allGoals.Length];
         gamePanels = new GoalPanel[allGoals.Length];
@@ -71,6 +73,18 @@ public class GoalManager : MonoBehaviour
                 if(IsWin())
                 {
                     movesText.text = "Win";
+                    int currentLevelIndex = LevelManager.currentLevel -1;
+                    int nextLevelIndex = LevelManager.currentLevel;
+                    if (gameData != null)
+                    {
+                        
+                        gameData.saveData.isFinished[currentLevelIndex] = true;
+                        if (nextLevelIndex < gameData.saveData.isActive.Length)
+                        {
+                            gameData.saveData.isActive[nextLevelIndex - 1] = true;
+                        }
+                        gameData.Save();
+                    }
                     gameManager.WinGame();
                 }
                 else

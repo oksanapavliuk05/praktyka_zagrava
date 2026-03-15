@@ -24,6 +24,7 @@ public class Board : MonoBehaviour
     private GoalManager goalManager;
     private float swipeResist = 1f;
     private int matchScore = 20;
+    private int level;
     public int Width { 
         get {return width;} 
     } 
@@ -52,6 +53,7 @@ public class Board : MonoBehaviour
         matchFinder.Start();
         scoreManager = Object.FindFirstObjectByType<ScoreManager>(); 
         goalManager = Object.FindFirstObjectByType<GoalManager>();
+        level = LevelManager.currentLevel;
         SetUp();
     }
     private void SetUp()
