@@ -14,16 +14,24 @@ public class SceneLoader : MonoBehaviour
     public void NextLevelWin()
     {
         int nextLevelIndex = LevelManager.currentLevel + 1;
-        // if (gameData != null)
-        // {
-        //     if (nextLevelIndex < gameData.saveData.isActive.Length)
-        //     {
-        //         gameData.saveData.isActive[nextLevelIndex - 1] = true;
-        //         gameData.Save();
-        //     }
-        // }
+
+        if (gameData != null)
+        {
+            // позначаємо поточний рівень як завершений
+            gameData.saveData.isFinished[LevelManager.currentLevel - 1] = true;
+
+            // відкриваємо наступний рівень
+            if (nextLevelIndex <= gameData.saveData.isActive.Length)
+            {
+                gameData.saveData.isActive[nextLevelIndex - 1] = true;
+            }
+
+            gameData.Save();
+        }
+
         LevelManager.hearts--;
         LevelManager.currentLevel = nextLevelIndex;
+
         sceneToLoad = "Level " + nextLevelIndex;
         SceneManager.LoadScene(sceneToLoad);
     }
@@ -42,8 +50,29 @@ public class SceneLoader : MonoBehaviour
         sceneToLoad = "Level " + LevelManager.currentLevel;
         SceneManager.LoadScene(sceneToLoad);
     }
+    public void LevelMap()
+    {
+        SceneManager.LoadScene("LevelMap");
+    }
     public void MainMenu()
     {
+        if (gameData != null)
+        {
+            int currentLevel = LevelManager.currentLevel;
+            int nextLevel = currentLevel + 1;
+
+            // відмічаємо рівень як пройдений
+            gameData.saveData.isFinished[currentLevel - 1] = true;
+
+            // відкриваємо наступний
+            if (nextLevel <= gameData.saveData.isActive.Length)
+            {
+                gameData.saveData.isActive[nextLevel - 1] = true;
+            }
+
+            gameData.Save();
+        }
+
         SceneManager.LoadScene("LevelMap");
     }
     public void PlayStory()

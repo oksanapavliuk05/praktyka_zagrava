@@ -1991,7 +1991,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 351797359}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: MainMenu
+        m_MethodName: LevelMap
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3767,7 +3767,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1595180965}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: MainMenu
+        m_MethodName: LevelMap
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4561,15 +4561,9 @@ MonoBehaviour:
   - GoalSprite: {fileID: 8891180011573125036, guid: 4d619e68a36d4f1468f00bead04a1c49, type: 3}
     goalTag: Yellow Dot
     numberNeeded: 15
-  - GoalSprite: {fileID: 1577803503355288185, guid: 47556012b60bc264ab47c2304cfad117, type: 3}
-    goalTag: Red Dot
-    numberNeeded: 10
-  - GoalSprite: {fileID: 5275587752316290064, guid: ca21cba075fdeee4a98fa2d38658a545, type: 3}
-    goalTag: Green Dot
-    numberNeeded: 15
   - GoalSprite: {fileID: 7572875019425888158, guid: ac5585728c0c9104c9bf1abdb1dd44fc, type: 3}
     goalTag: Pink Dot
-    numberNeeded: 15
+    numberNeeded: 40
   goalPrefab: {fileID: 4635870883689199013, guid: 7d5d84e3295538340bcf58edbb2710f7, type: 3}
   goalIntroParent: {fileID: 459154223}
   goalGameParent: {fileID: 624483769}
